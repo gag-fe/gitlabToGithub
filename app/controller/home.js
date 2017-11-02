@@ -1,20 +1,25 @@
 'use strict';
 let baseUrl = 'http://git.gag.cn/api/v3';
-let token = 'XfuKh_TqjqRt-KaZgyXc';
+
 let Git = require('simple-git')();
 let SimpleGit = require('simple-git');
 let shell = require('shelljs');
 let path = require('path');
 let fs = require('fs');
-let access_token = 'afe2d7e7393db63f0d3709cb61c0ff8be4575da0';
 let base = '/Users/yaojiasong/gooagoo/gitlab';
 let githubBaseUrl = 'https://api.github.com';
 module.exports = app => {
   class HomeController extends app.Controller {
     * index(ctx) {
-        let group = yield ctx.curl(`${baseUrl}/groups?private_token=${token}`, {
+        let { gitlabToken } = ctx.query;
+        if(!gitlabToken) {
+            this.error('参数有误');
+            return;
+        }
+        let group = yield ctx.curl(`${baseUrl}/groups?private_token=${gitlabToken}`, {
             dataType: 'json'
         });
+        this.ctx.status = group.status;
         this.ctx.body = group.data;
     }
     * git_clone_project(ctx) {
