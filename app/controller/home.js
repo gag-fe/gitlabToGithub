@@ -104,8 +104,9 @@ module.exports = app => {
         shell.cd(`${p}`);
         shell.rm('-rf', '.DS_Store');
         let arr = fs.readdirSync(`${p}`);
+        let outPut = [];
         for (let i = 0; i < arr.length; i++) {
-            yield ctx.curl(`${githubBaseUrl}/orgs/gag-fe/repos?access_token=${githubToken}`,{
+            let result = yield ctx.curl(`${githubBaseUrl}/orgs/${groupName}/repos?access_token=${githubToken}`,{
                 dataType: 'json',
                 method: 'POST',
                 contentType: 'json',
@@ -117,8 +118,12 @@ module.exports = app => {
                     'Accept': 'application/vnd.github.mercy-preview+json'
                 }
             });
+            outPut.push({
+                data: result.data,
+                status: result.status
+            })
         }
-        ctx.body = arr;
+        ctx.body = outPut;
     }
     * git_push_to_github (ctx) {
         let { groupName , commitText = 'first commit'} = ctx.query;
@@ -127,24 +132,26 @@ module.exports = app => {
             return;
         }
         let groupPath = `${base}/${groupName}`;
-        shell.cd(`${p}`);
+        shell.cd(`${groupPath}`);
         shell.rm('-rf', '.DS_Store');
         let arr = fs.readdirSync(groupPath);
         let outPut = [];
         for (let i = 0; i< arr.length; i ++ ) {
-            let result = this.gitpush(arr[i]);
+            let result = this.gitpush(arr[i], groupPath, commitText, groupName);
             yield result.then(() => {
                 outPut.push(arr[i], groupPath, commitText);
             })
         }
         ctx.body = outPut;
     }
-    gitpush (name, baseLocal, commitText) {
-        shell.cd(`${baseLocal}/${name}`);
+    gitpush (name, baseLocal, commitText, groupName) {
+        let gitHubPath = `${baseLocal}/${name}`;
+        console.log(gitHubPath);
+        shell.cd(gitHubPath);
         shell.rm('-rf','.git');
         let result = new Promise((resolve, reject) => {
-            let git = SimpleGit(`${baseLocal}/${name}`);
-            let sshUrl = `https://github.com/gag-fe/${name}.git`;
+            let git = SimpleGit(gitHubPath);
+            let sshUrl = `https://github.com/${groupName}/${name}.git`;
             console.log(sshUrl);
             git.init()
                 .add('./*')
