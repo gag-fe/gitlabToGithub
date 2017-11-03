@@ -42,3 +42,9 @@ $ npm stop
 * Params commitText（push 到仓库的 commit 默认‘‘fi’’）
 * */
 ```
+
+### url
+
+拉取gitlab:http://127.0.0.1:7001/git_clone_gitlab_project?gitlabToken=-xCTWfH-C2XcFMVUpVza&groupName=rc-common
+创建githab res:http://127.0.0.1:7001/create_github_repo?githubToken=464dafe713a228eabc35ba8ba4ff3328e4d78e2a_xx&groupName=bfkoldalibaba
+pull githab： http://127.0.0.1:7001/git_push_to_github?githubToken=464dafe713a228eabc35ba8ba4ff3328e4d78e2a_qwe&groupName=bfkoldalibaba

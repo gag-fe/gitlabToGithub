@@ -6,7 +6,7 @@ let SimpleGit = require('simple-git');
 let shell = require('shelljs');
 let path = require('path');
 let fs = require('fs');
-let base = '/Users/yaojiasong/gooagoo/gitlab';
+let base = '/Users/hou/work/bfk_googoo';
 let githubBaseUrl = 'https://api.github.com';
 module.exports = app => {
   class HomeController extends app.Controller {
@@ -112,7 +112,7 @@ module.exports = app => {
                 contentType: 'json',
                 data:{
                     name: arr[i],
-                    description: 'GaG FE'+arr[i]
+                    description: arr[i]
                 },
                 headers: {
                     'Accept': 'application/vnd.github.mercy-preview+json'
